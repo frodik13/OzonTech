@@ -2,11 +2,11 @@
 
 public class Program
 {
-    static void Main(string[] args)
+    static void MainX(string[] args)
     {
         var files = Directory.GetFiles("validate-output");
 
-        var dataMap = new Dictionary<int, Data>();
+        var dataMap = new Dictionary<int, Data<string>>();
 
         foreach (var file in files)
         {
@@ -22,7 +22,7 @@ public class Program
                 }
                 else
                 {
-                    dataMap.TryAdd(Convert.ToInt32(fileName), new Data() { Output = lines.ToList() });
+                    dataMap.TryAdd(Convert.ToInt32(fileName), new Data<string> { Output = lines.ToList() });
                 }
                 continue;
             }
@@ -58,7 +58,7 @@ public class Program
             }
             else
             {
-                dataMap.TryAdd(Convert.ToInt32(fileName), new Data() { Input = outputList });
+                dataMap.TryAdd(Convert.ToInt32(fileName), new Data<string> { Input = outputList });
             }
         }
 
@@ -142,10 +142,4 @@ public class Validator
 
         return Yes;
     }
-}
-
-public class Data
-{
-    public List<string> Input { get; set; }
-    public List<string> Output { get; set;}
 }
