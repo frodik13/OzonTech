@@ -37,13 +37,11 @@ public class Program
 
             for (var i = 0; i < inputCount; i++)
             {
-                var validator = new Validator();
-
                 var countNumber = input.ReadLine();
                 var inputNumbers = input.ReadLine();
                 var outputNumbers = input.ReadLine();
 
-                var result = validator.Validate(countNumber, inputNumbers, outputNumbers);
+                var result = Validator.Validate(countNumber, inputNumbers, outputNumbers);
                 outputList.Add(result);
             }
 
@@ -101,39 +99,41 @@ public class Program
     }
 }
 
-public class Validator
+public static class Validator
 {
     private const string Yes = "yes";
     private const string No = "no";
 
-    public string Validate(string? countNumberStr, string? inputNumbersStr, string? outputNumbersStr)
+    public static string Validate(string? countNumberStr, string? inputNumbersStr, string? outputNumbersStr)
     {
         if (countNumberStr == null || inputNumbersStr == null || outputNumbersStr == null)
-            throw new NullReferenceException();
-        
+            return No;
+
+        if (outputNumbersStr.StartsWith(" ") || outputNumbersStr.EndsWith(" "))
+            return No;
+
         var countNumber = Convert.ToInt32(countNumberStr);
-        var inputNumbersStrList = inputNumbersStr.Split(" ");
+        var inputNumbersStrList = inputNumbersStr.Split(" ", StringSplitOptions.TrimEntries);
         var outputNumberStrList = outputNumbersStr.Split(" ");
 
         if (inputNumbersStrList.Length != countNumber || outputNumberStrList.Length != countNumber)
             return No;
 
-        var inputNumberList = new List<int>();
-        var outputNumberList = new List<int>();
+        var inputNumberList = new int[countNumber];
+        var outputNumberList = new int[countNumber];
         for (var i = 0; i < countNumber; i++)
         {
             if (!int.TryParse(inputNumbersStrList[i], out var number))
                 return No;
-            inputNumberList.Add(number);
+            inputNumberList[i] = number;
 
             if (!int.TryParse(outputNumberStrList[i], out var outputNumber))
                 return No;
-            outputNumberList.Add(outputNumber);
+            outputNumberList[i] = outputNumber;
         }
 
-        inputNumberList.Sort();
+        Array.Sort(inputNumberList);
 
-        return inputNumberList.SequenceEqual(outputNumberList) ? Yes : No;
         for (var i = 0; i < countNumber; i++)
         {
             if (inputNumberList[i] != outputNumberList[i])

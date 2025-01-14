@@ -8,7 +8,7 @@ namespace OzonTech.VirusFile;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static void MainX(string[] args)
     {
         Test();
         //Solution();
