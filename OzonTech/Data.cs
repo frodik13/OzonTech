@@ -15,7 +15,10 @@ public class Data<T> where T : IComparable<T>
 
         for (var i = 0; i < Input.Count; i++)
             if (!Input[i].Equals(Output[i]))
+            {
+                Console.WriteLine($"Input and Output are different. Index = {i}");
                 return false;
+            }
         
         return true;
     }

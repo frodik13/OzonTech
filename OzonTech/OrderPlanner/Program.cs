@@ -36,7 +36,7 @@ public class Program
             using var input = new StreamReader(new FileStream(file, FileMode.Open));
             using var output = new StreamWriter(Console.OpenStandardOutput());
             
-            var inputCount = Convert.ToInt32(input.ReadLine());
+            var inputCount = int.Parse(input.ReadLine());
             var outputList = new List<string>();
             
             for (var i = 0; i < inputCount; i++)
@@ -67,8 +67,8 @@ public class Program
     private static string GetListOfCarsForAllOrders(StreamReader input)
     {
         var countOrders = Convert.ToInt32(input.ReadLine());
-        var arrivals = input.ReadLine()!.Split(' ').Select(int.Parse).ToList();
-        var numbersOfTrucks = Convert.ToInt32(input.ReadLine());
+        var arrivals = input.ReadLine()!.Split(' ').Select((a, i) => new Order{Arrival = int.Parse(a), Index = i}).ToList();
+        var numbersOfTrucks = int.Parse(input.ReadLine());
         var trucks = new Truck[numbersOfTrucks];
         for (var i = 0; i < numbersOfTrucks; i++)
         {
@@ -77,22 +77,49 @@ public class Program
             {
                 Start = truckData[0],
                 End = truckData[1],
-                Capacity = truckData[2]
+                Capacity = truckData[2],
+                Index = i + 1,
             };
         }
-        
-        throw new NotImplementedException();
+
+        return new OrderPlanner().GetListTruck(arrivals, trucks);
     }
 
     private static void Solution()
     {
-        throw new NotImplementedException();
+        using var input = new StreamReader(Console.OpenStandardInput());
+        using var output = new StreamWriter(Console.OpenStandardOutput());
+
+        var inputCount = Convert.ToInt32(input.ReadLine());
+        var outputList = new List<string>();
+        for (var i = 0; i < inputCount; i++)
+        {
+            outputList.Add(GetListOfCarsForAllOrders(input));
+        }
+
+        foreach (var outputValue in outputList)
+        {
+            output.WriteLine(outputValue);
+        }
     }
 }
 
 public class Truck
 {
+    public int Index { get; init; }
     public int Start { get; init; }
     public int End { get; init; }
-    public int Capacity { get; init; }
+    public int Capacity { get; set; }
+
+    public void AddOrder()
+    {
+        Capacity--;
+    }
+}
+
+
+public struct Order
+{
+    public int Arrival { get; init; }
+    public int Index { get; init; }
 }
