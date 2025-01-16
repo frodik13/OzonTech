@@ -67,7 +67,7 @@ public class Program
     private static string GetListOfCarsForAllOrders(StreamReader input)
     {
         var countOrders = Convert.ToInt32(input.ReadLine());
-        var arrivals = input.ReadLine()!.Split(' ').Select((a, i) => new Order{Arrival = int.Parse(a), Index = i}).ToList();
+        var arrivals = input.ReadLine()!.Split(' ').Select((a, i) => new Order{Arrival = int.Parse(a), Index = i}).ToArray();
         var numbersOfTrucks = int.Parse(input.ReadLine());
         var trucks = new Truck[numbersOfTrucks];
         for (var i = 0; i < numbersOfTrucks; i++)

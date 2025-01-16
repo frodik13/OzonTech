@@ -2,11 +2,11 @@ namespace OzonTech.OrderPlanner;
 
 public class OrderPlanner
 {
-    public string GetListTruck(List<Order> orders, Truck[] trucks)
+    public string GetListTruck(Order[] orders, Truck[] trucks)
     {
-        orders.Sort(Comparison);
+        orders = orders.OrderBy(order => order.Arrival).ToArray();
         
-        var listTruck = new int[orders.Count];
+        var listTruck = new int[orders.Length];
         
         foreach (var order in orders)
         {
@@ -26,13 +26,7 @@ public class OrderPlanner
 
         return string.Join(" ", listTruck) + " ";
     }
-
-
-    private int Comparison(Order order, Order order1)
-    {
-        return order.Arrival > order1.Arrival ? 1 : -1;
-    }
-
+    
     private int Comparison(Truck truck, Truck truck1)
     {
         if (truck.Start == truck1.Start)
