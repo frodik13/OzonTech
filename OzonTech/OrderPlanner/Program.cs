@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 namespace OzonTech.OrderPlanner;
 
 public class Program
@@ -39,11 +41,13 @@ public class Program
             var inputCount = int.Parse(input.ReadLine());
             var outputList = new List<string>();
             
+            var stopwatch = Stopwatch.StartNew();
             for (var i = 0; i < inputCount; i++)
             {
                 outputList.Add(GetListOfCarsForAllOrders(input));
             }
-            
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.Elapsed);
             if (dataMap.TryGetValue(Convert.ToInt32(fileName), out var data))
             {
                 data.Input = outputList;
@@ -72,12 +76,12 @@ public class Program
         var trucks = new Truck[numbersOfTrucks];
         for (var i = 0; i < numbersOfTrucks; i++)
         {
-            var truckData = input.ReadLine()!.Split(' ').Select(int.Parse).ToList();
+            var truckData = input.ReadLine()!.Split(' ');
             trucks[i] = new Truck
             {
-                Start = truckData[0],
-                End = truckData[1],
-                Capacity = truckData[2],
+                Start = int.Parse(truckData[0]),
+                End = int.Parse(truckData[1]),
+                Capacity = int.Parse(truckData[2]),
                 Index = i + 1,
             };
         }
