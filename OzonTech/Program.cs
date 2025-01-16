@@ -1,8 +1,10 @@
-﻿namespace OzonTech;
+﻿using System.Diagnostics;
+
+namespace OzonTech;
 
 public class Program
 {
-    static void MainX(string[] args)
+    static void Main(string[] args)
     {
         var files = Directory.GetFiles("validate-output");
 
@@ -34,7 +36,7 @@ public class Program
 
             var outputList = new List<string>();
             var inputCount = Convert.ToInt32(input.ReadLine());
-
+            var stopwatch = Stopwatch.StartNew();
             for (var i = 0; i < inputCount; i++)
             {
                 var countNumber = input.ReadLine();
@@ -45,10 +47,8 @@ public class Program
                 outputList.Add(result);
             }
 
-            foreach (var outputStr in outputList)
-            {
-                output.WriteLine(outputStr);
-            }
+            stopwatch.Stop();
+            Console.WriteLine(stopwatch.Elapsed);
 
             if (dataMap.TryGetValue(Convert.ToInt32(fileName), out var data))
             {
@@ -62,16 +62,11 @@ public class Program
 
         foreach (var data in dataMap)
         {
-            Console.WriteLine(data.Key);
-            var result = true;
-            for (var i = 0; i < data.Value.Input.Count; i++)
-            {
-                if (data.Value.Input[i] == data.Value.Output[i]) continue;
-                result = false;
-                break;
-            }
-
-            Console.WriteLine(result);
+            Console.WriteLine($"""
+                               {new string('-', 80)}
+                               {data.Key} = {data.Value.IsValidData()}
+                               {new string('-', 80)}
+                               """);
         }
 
         //using var input = new StreamReader(Console.OpenStandardInput());
@@ -109,14 +104,14 @@ public static class Validator
         if (countNumberStr == null || inputNumbersStr == null || outputNumbersStr == null)
             return No;
 
-        if (outputNumbersStr.StartsWith(" ") || outputNumbersStr.EndsWith(" "))
+        if (outputNumbersStr.StartsWith(' ') || outputNumbersStr.EndsWith(' '))
             return No;
 
         var countNumber = Convert.ToInt32(countNumberStr);
         var inputNumbersStrList = inputNumbersStr.Split(" ", StringSplitOptions.TrimEntries);
         var outputNumberStrList = outputNumbersStr.Split(" ");
 
-        if (inputNumbersStrList.Length != countNumber || outputNumberStrList.Length != countNumber)
+        if (outputNumberStrList.Length != countNumber)
             return No;
 
         var inputNumberList = new int[countNumber];
@@ -127,12 +122,16 @@ public static class Validator
                 return No;
             inputNumberList[i] = number;
 
+            if (outputNumberStrList[i].StartsWith("0") || outputNumberStrList[i].StartsWith("-0"))
+                return No;
+            
             if (!int.TryParse(outputNumberStrList[i], out var outputNumber))
                 return No;
             outputNumberList[i] = outputNumber;
         }
 
-        Array.Sort(inputNumberList);
+        //Array.Sort(inputNumberList);
+        inputNumberList = inputNumberList.OrderBy(x => x).ToArray();
 
         for (var i = 0; i < countNumber; i++)
         {
