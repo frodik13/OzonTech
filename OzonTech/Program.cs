@@ -4,7 +4,7 @@ namespace OzonTech;
 
 public class Program
 {
-    static void Main(string[] args)
+    static void MainX(string[] args)
     {
         var files = Directory.GetFiles("validate-output");
 
