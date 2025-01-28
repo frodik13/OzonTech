@@ -1,6 +1,4 @@
-using System.ComponentModel.Design;
-
-namespace OzonTech.AsciiRobotTask;
+namespace OzonTech.Task1;
 
 public class Program
 {
@@ -8,10 +6,28 @@ public class Program
     {
         Test();
     }
+
+    private void Solution()
+    {
+        using var input = new StreamReader(Console.OpenStandardInput());
+        using var output = new StreamWriter(Console.OpenStandardOutput());
+
+        var inputCount = Convert.ToInt32(input.ReadLine());
+        var outputList = new List<string>();
+        for (var i = 0; i < inputCount; i++)
+        {
+            outputList.AddRange(GetMinNumberOfLightsAndLocation(input));
+        }
+
+        foreach (var outputValue in outputList)
+        {
+            output.WriteLine(outputValue);
+        }
+    }
     
     private static void Test()
     {
-        var files = Directory.GetFiles(Path.Combine("AsciiRobotTask", "ascii-robots"));
+        var files = Directory.GetFiles(Path.Combine("Task1", "dark-room"));
         var dataMap = new Dictionary<int, Data<string>>();
 
         foreach (var file in files)
@@ -39,10 +55,10 @@ public class Program
             
             var inputCount = Convert.ToInt32(input.ReadLine());
             var outputList = new List<string>();
-
+            
             for (var i = 0; i < inputCount; i++)
             {
-                outputList.AddRange(GetWayRobots(input));
+                outputList.AddRange(GetMinNumberOfLightsAndLocation(input));
             }
             
             if (dataMap.TryGetValue(Convert.ToInt32(fileName), out var data))
@@ -65,51 +81,55 @@ public class Program
         }
     }
 
-    private static List<string> GetWayRobots(StreamReader input)
+    private static IEnumerable<string> GetMinNumberOfLightsAndLocation(StreamReader input)
     {
-        var counts = input.ReadLine().Split(' ');
-        var n = int.Parse(counts[0]);
-        var m = int.Parse(counts[1]);
-        var map = new char[n][];
-        Robot robotA = null;
-        Robot robotB = null;
-        for (var i = 0; i < n; i++)
-        {
-            map[i] = new char[m];
-            var line = input.ReadLine();
-            for (var j = 0; j < m; j++)
-            {
-                map[i][j] = line[j];
-                if (line[j] == 'A')
-                {
-                    robotA = new Robot((i, j), 'a');
-                }
+        var result = new List<string>();
 
-                if (line[j] == 'B')
-                {
-                    robotB = new Robot((i, j), 'b');
-                }
-            }
+        var sizeRoom = input.ReadLine().Split(' ');
+        var n = int.Parse(sizeRoom[0]);
+        var m = int.Parse(sizeRoom[1]);
+        var lights = new List<(int x, int y, char direction)>();
+        if (n == m && n > 1)
+        {
+            lights.Add((1, 1, 'R'));
+            lights.Add((n, m, 'L'));
+        }
+        else if (n == m && n == 1)
+        {
+            lights.Add((1, 1, 'R'));
+        }
+        else if (n > m && m == 1)
+        {
+            lights.Add((1, 1, 'D'));
+        }
+        else if (n < m && n == 1)
+        {
+            lights.Add((1, 1, 'R'));
+        }
+        else
+        {
+            lights.Add((1, 1, 'D'));
+            lights.Add((n, m, 'U'));
+        }
+
+        result.Add(lights.Count.ToString());
+        foreach (var light in lights)
+        {
+            result.Add($"{light.x} {light.y} {light.direction}");
         }
         
-        return RouteBuilder.BuildRoutes(map, robotA, robotB);
+        return result;
     }
 
-    private static void Solution()
+    class Room
     {
-        using var input = new StreamReader(Console.OpenStandardInput());
-        using var output = new StreamWriter(Console.OpenStandardOutput());
-
-        var inputCount = Convert.ToInt32(input.ReadLine());
-        var outputList = new List<string>();
-        for (var i = 0; i < inputCount; i++)
+        public Room(int n, int m)
         {
-            outputList.AddRange(GetWayRobots(input));
+            N = n;
+            M = m;
         }
 
-        foreach (var outputValue in outputList)
-        {
-            output.WriteLine(outputValue);
-        }
+        public int N { get; }
+        public int M { get; }
     }
 }

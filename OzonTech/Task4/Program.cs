@@ -1,17 +1,46 @@
-using System.ComponentModel.Design;
-
-namespace OzonTech.AsciiRobotTask;
+namespace OzonTech.Task4;
 
 public class Program
 {
     public static void MainX(string[] args)
     {
-        Test();
+        using var input = new StreamReader(Console.OpenStandardInput());
+        using var output = new StreamWriter(Console.OpenStandardOutput());
+
+        var inputCount = Convert.ToInt32(input.ReadLine());
+        var outputList = new List<int>();
+        for (var i = 0; i < inputCount; i++)
+        {
+            //outputList.Add(GetVirusFilesCount(input));
+        }
+
+        foreach (var outputValue in outputList)
+        {
+            output.WriteLine(outputValue);
+        }
+    }
+    
+    private void Solution()
+    {
+        using var input = new StreamReader(Console.OpenStandardInput());
+        using var output = new StreamWriter(Console.OpenStandardOutput());
+
+        var inputCount = Convert.ToInt32(input.ReadLine());
+        var outputList = new List<int>();
+        for (var i = 0; i < inputCount; i++)
+        {
+            //outputList.Add(GetVirusFilesCount(input));
+        }
+
+        foreach (var outputValue in outputList)
+        {
+            output.WriteLine(outputValue);
+        }
     }
     
     private static void Test()
     {
-        var files = Directory.GetFiles(Path.Combine("AsciiRobotTask", "ascii-robots"));
+        var files = Directory.GetFiles(Path.Combine("OrderPlanner", "order-planner"));
         var dataMap = new Dictionary<int, Data<string>>();
 
         foreach (var file in files)
@@ -39,10 +68,10 @@ public class Program
             
             var inputCount = Convert.ToInt32(input.ReadLine());
             var outputList = new List<string>();
-
+            
             for (var i = 0; i < inputCount; i++)
             {
-                outputList.AddRange(GetWayRobots(input));
+                //outputList.Add(GetVirusFilesCount(input));
             }
             
             if (dataMap.TryGetValue(Convert.ToInt32(fileName), out var data))
@@ -62,54 +91,6 @@ public class Program
                                {data.Key} = {data.Value.IsValidData()}
                                {new string('-', 80)}
                                """);
-        }
-    }
-
-    private static List<string> GetWayRobots(StreamReader input)
-    {
-        var counts = input.ReadLine().Split(' ');
-        var n = int.Parse(counts[0]);
-        var m = int.Parse(counts[1]);
-        var map = new char[n][];
-        Robot robotA = null;
-        Robot robotB = null;
-        for (var i = 0; i < n; i++)
-        {
-            map[i] = new char[m];
-            var line = input.ReadLine();
-            for (var j = 0; j < m; j++)
-            {
-                map[i][j] = line[j];
-                if (line[j] == 'A')
-                {
-                    robotA = new Robot((i, j), 'a');
-                }
-
-                if (line[j] == 'B')
-                {
-                    robotB = new Robot((i, j), 'b');
-                }
-            }
-        }
-        
-        return RouteBuilder.BuildRoutes(map, robotA, robotB);
-    }
-
-    private static void Solution()
-    {
-        using var input = new StreamReader(Console.OpenStandardInput());
-        using var output = new StreamWriter(Console.OpenStandardOutput());
-
-        var inputCount = Convert.ToInt32(input.ReadLine());
-        var outputList = new List<string>();
-        for (var i = 0; i < inputCount; i++)
-        {
-            outputList.AddRange(GetWayRobots(input));
-        }
-
-        foreach (var outputValue in outputList)
-        {
-            output.WriteLine(outputValue);
         }
     }
 }
